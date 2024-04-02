@@ -3,7 +3,7 @@ spring:
     redisson:
       config: |
         singleServerConfig:
-          address: "redis://localhost:6379"
+          address: "redis://redis:6379"
           database: 10
           connectionMinimumIdleSize: 12
         threads: 16
@@ -14,9 +14,9 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     driverClassName: com.mysql.cj.jdbc.Driver
     druid:
-      url: jdbc:mysql://144.24.42.106:8080/suiteboot_wms?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&autoReconnect=true
+      url: jdbc:mysql://mysql:3306/suiteboot-example?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&autoReconnect=true
       username: root
-      password: YooJZPuBcfBumG2c@
+      password: root
       # 初始连接数
       initialSize: 5
       # 最小连接池数量
@@ -59,10 +59,10 @@ spring:
       remove-abandoned: true
   data:
     mongodb:
-      uri: mongodb://localhost:27017,localhost:27018,localhost:27019/suiteboot?replicaSet=myReplicaSet
+      uri: mongodb://mongodb:27017/suiteboot-example?replicaSet=myReplicaSet
   elasticsearch:
     rest:
-      uris: http://localhost:9200
+      uris: http://elasticsearch:9200
 
 logging:
   config: classpath:logback.xml

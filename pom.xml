@@ -26,7 +26,6 @@
 
     <profiles>
         <profile>
-            <!-- 开发环境 -->
             <id>develop</id>
             <properties>
                 <profiles.active>dev</profiles.active>
@@ -36,28 +35,24 @@
             </activation>
         </profile>
         <profile>
-            <!-- 本地环境 -->
             <id>local</id>
             <properties>
                 <profiles.active>local</profiles.active>
             </properties>
         </profile>
         <profile>
-            <!-- 测试环境 -->
             <id>test</id>
             <properties>
                 <profiles.active>test</profiles.active>
             </properties>
         </profile>
         <profile>
-            <!-- UAT环境 -->
             <id>uat</id>
             <properties>
                 <profiles.active>uat</profiles.active>
             </properties>
         </profile>
         <profile>
-            <!-- 生产环境 -->
             <id>product</id>
             <properties>
                 <profiles.active>prod</profiles.active>
@@ -162,12 +157,64 @@
                     <fork>true</fork>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>com.suiteboot.example.Application</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-lib</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>false</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                            <includeScope>runtime</includeScope>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <descriptors>
+                        <descriptor>src/main/resources/assembly/assembly.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
+        <finalName>${project.artifactId}</finalName>
         <resources>
             <resource>
-                <!--打包该目录下的 application.yml -->
                 <directory>src/main/resources</directory>
-                <!-- 启用过滤 即该资源中的变量将会被过滤器中的值替换 -->
                 <filtering>true</filtering>
             </resource>
         </resources>

@@ -1,0 +1,7 @@
+FROM maven:3.9.6-eclipse-temurin-17 AS builder
+WORKDIR /app
+COPY ./ ./
+RUN mvn --settings ./settings.xml clean package -Dmaven.test.skip=true
+
+FROM maven:3.9.6-eclipse-temurin-17
+COPY --from=builder /root/.m2/repository /root/.m2/repository

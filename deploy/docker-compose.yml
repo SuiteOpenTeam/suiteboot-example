@@ -1,0 +1,70 @@
+version: "3"
+
+services:
+  redis:
+    image: redis:7.2.4-alpine
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+  mysql:
+    image: mysql:8.3.0
+    container_name: mysql
+    restart: always
+    volumes:
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    environment:
+      - TZ=Asia/Shanghai
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=suiteboot-example
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - "3306:3306"
+  elasticsearch:
+    image: elasticsearch:7.17.10
+    container_name: elasticsearch
+    restart: always
+    volumes:
+      - ./elasticsearch/elasticsearch.yaml:/usr/share/elasticsearch/config/elasticsearch.yml
+    environment:
+      - discovery.type=single-node
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    volumes:
+      - ./mongodb/init.js:/docker-entrypoint-initdb.d/init.js:ro
+    environment:
+      MONGO_INITDB_DATABASE: suiteboot-example
+    command: ["--replSet" , "myReplicaSet" , "--bind_ip", "localhost, mongodb"]
+    ports:
+      - "27017:27017"
+  mongodbClient:
+    image: mongo:latest
+    container_name: mongodbClient
+    volumes:
+      - ./mongodb/init.sh:/init.sh
+    command: sh "/init.sh"
+    depends_on:
+      - mongodb
+
+  suiteboot-example:
+    image: registry.cn-hangzhou.aliyuncs.com/opensource-sharing/suiteboot-example:1.0
+    container_name: suiteboot-example
+    restart: always
+    environment:
+      - "REDIS_CONNECTION_STRING=redis://redis:6379"
+      - "MYSQL_CONNECTION_STRING=jdbc:mysql://mysql:3306/suiteboot-example?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&autoReconnect=true"
+      - "MYSQL_ROOT_PASSWORD=root"
+      - "MONGODB_CONNECTION_STRING=mongodb://mongodb:27017/suiteboot-example?replicaSet=myReplicaSet"
+      - "ELASTICSEARCH_CONNECTION_STRING=http://elasticsearch:9200"
+    depends_on:
+      - redis
+      - mysql
+      - elasticsearch
+      - mongodb
+    ports:
+      - "8080:8080"
