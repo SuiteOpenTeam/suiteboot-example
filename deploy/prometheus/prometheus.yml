@@ -1,0 +1,8 @@
+global:
+  scrape_interval: 30s
+  evaluation_interval: 30s
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+rule_files:

@@ -1,0 +1,17 @@
+dist:
+  module: go.opentelemetry.io/collector/cmd/otelcorecol
+  name: collector
+  description: Custom OpenTelemetry Collector binary.
+  version: v0.96.0-a
+  output_path: /go/ocb_builder
+
+receivers:
+  - gomod: go.opentelemetry.io/collector/receiver/otlpreceiver v0.96.0
+exporters:
+  - gomod: "go.opentelemetry.io/collector/exporter/loggingexporter v0.96.0"
+  - gomod: "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/prometheusremotewriteexporter v0.96.0"
+  - gomod: "go.opentelemetry.io/collector/exporter/otlpexporter v0.96.0"
+  - gomod: "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/elasticsearchexporter v0.96.1"
+    import: "github.com/open-telemetry/opentelemetry-collector-contrib/exporter/elasticsearchexporter"
+    name: "elasticsearchexporter"
+    path: "/go/opentelemetry-collector-contrib/exporter/elasticsearchexporter"

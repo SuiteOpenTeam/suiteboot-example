@@ -1,12 +1,82 @@
 version: "3"
 
 services:
+  elasticsearch:
+    image: elasticsearch:7.17.10
+    container_name: elasticsearch
+    restart: always
+    volumes:
+      - ./elasticsearch/elasticsearch.yaml:/usr/share/elasticsearch/config/elasticsearch.yml
+    environment:
+      - discovery.type=single-node
+    ports:
+      - "19200:9200"
+      - "19300:9300"
+  jaeger:
+    image: jaegertracing/all-in-one:1
+    container_name: jaeger-prod
+    ports:
+      - "10080:80"
+      - "16686:16686"
+      - "14317:4317"
+      - "14318:4318"
+    restart: always
+    depends_on:
+      - elasticsearch
+  prometheus:
+    image: prom/prometheus:v2.50.1
+    container_name: prometheus-prod
+    ports:
+      - "19090:9090"
+    command:
+      - "--enable-feature=otlp-write-receive"
+      - "--web.enable-remote-write-receiver"
+      - "--enable-feature=native-histograms"
+      - "--enable-feature=exemplar-storage"
+    restart: always
+    volumes:
+      - ./prometheus/prometheus.yml:/prometheus/prometheus.yml
+  grafana:
+    image: grafana/grafana:10.0.12
+    container_name: grafana-prod
+    ports:
+      - "13000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=grafana # 配置管理员密码
+    volumes:
+      - ./grafana:/etc/grafana/provisioning/datasources  # 当前grafana目录需要有配置文件
+    restart: always
+    depends_on:
+      - prometheus
+  kibana:
+    image: kibana:7.17.9
+    container_name: kibana-prod
+    ports:
+      - "15601:5601"
+    volumes:
+      - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
+    restart: always
+  otel-collector:
+    image: voyagerma/otel-collector:0.96.0
+    container_name: otel-agent-prod
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+    volumes:
+      - ./otelcol/otelcol-contrib-config.yaml:/etc/otelcol-contrib/config.yaml # 注意当前目录下需要有collector配置文件
+    restart: always
+    depends_on:
+      - kibana
+      - grafana
+      - jaeger
+      - prometheus
   redis:
     image: redis:7.2.4-alpine
     container_name: redis
     restart: always
     ports:
-      - "6379:6379"
+      - "16379:6379"
   mysql:
     image: mysql:8.3.0
     container_name: mysql
@@ -19,18 +89,7 @@ services:
       - MYSQL_DATABASE=suiteboot-example
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
     ports:
-      - "3306:3306"
-  elasticsearch:
-    image: elasticsearch:7.17.10
-    container_name: elasticsearch
-    restart: always
-    volumes:
-      - ./elasticsearch/elasticsearch.yaml:/usr/share/elasticsearch/config/elasticsearch.yml
-    environment:
-      - discovery.type=single-node
-    ports:
-      - "9200:9200"
-      - "9300:9300"
+      - "13306:3306"
   mongodb:
     image: mongo:latest
     container_name: mongodb
@@ -41,7 +100,7 @@ services:
       MONGO_INITDB_DATABASE: suiteboot-example
     command: ["--replSet" , "myReplicaSet" , "--bind_ip", "localhost, mongodb"]
     ports:
-      - "27017:27017"
+      - "27027:27017"
   mongodbClient:
     image: mongo:latest
     container_name: mongodbClient
@@ -52,7 +111,7 @@ services:
       - mongodb
 
   suiteboot-example:
-    image: registry.cn-hangzhou.aliyuncs.com/opensource-sharing/suiteboot-example:1.0
+    image: registry.cn-hangzhou.aliyuncs.com/opensource-sharing/suiteboot-example:v2.0
     container_name: suiteboot-example
     restart: always
     environment:
@@ -67,4 +126,14 @@ services:
       - elasticsearch
       - mongodb
     ports:
-      - "8080:8080"
+      - "10006:8080"
+
+  suiteboot-web:
+    image: registry.cn-hangzhou.aliyuncs.com/opensource-sharing/suiteboot-web:v2.0
+    container_name: suiteboot-web
+    restart: always
+    depends_on:
+      - suiteboot-example
+    ports:
+      - "10007:80"
+

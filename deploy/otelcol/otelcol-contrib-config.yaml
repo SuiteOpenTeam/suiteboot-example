@@ -1,0 +1,35 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+exporters:
+  logging:
+    loglevel: debug
+  otlp/jaeger:
+    endpoint: jaeger:4317
+#    endpoint: 172.19.0.3:4317
+    tls:
+      insecure: true
+  elasticsearch/log:
+    endpoints: ["http://elasticsearch:9200"]
+#    endpoints: ["http://172.17.0.2:9200"]
+    logs_index: log-indice
+    logs_dynamic_index:
+      enabled: true
+      partitionIndexSuffixDateFormat: 2006-01
+  prometheusremotewrite:
+    endpoint: http://prometheus:9090/api/v1/write
+#    endpoint: http://172.19.0.5:9090/api/v1/write
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      exporters: [otlp/jaeger]
+    logs:
+      receivers: [otlp]
+      exporters: [elasticsearch/log]
+    metrics:
+      receivers: [otlp]
+      exporters: [prometheusremotewrite]
