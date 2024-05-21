@@ -58,7 +58,7 @@ services:
       - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
     restart: always
   otel-collector:
-    image: voyagerma/otel-collector:0.96.0
+    image: registry.cn-hangzhou.aliyuncs.com/opensource-sharing/otel-collector:v0.96.0
     container_name: otel-agent-prod
     ports:
       - "4317:4317"
