@@ -36,19 +36,19 @@ services:
     restart: always
     volumes:
       - ./prometheus/prometheus.yml:/prometheus/prometheus.yml
-  grafana:
-    image: grafana/grafana:10.0.12
-    container_name: grafana-prod
-    ports:
-      - "13000:3000"
-    environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=grafana # 配置管理员密码
-    volumes:
-      - ./grafana:/etc/grafana/provisioning/datasources  # 当前grafana目录需要有配置文件
-    restart: always
-    depends_on:
-      - prometheus
+#  grafana:
+#    image: grafana/grafana:10.0.12
+#    container_name: grafana-prod
+#    ports:
+#      - "13000:3000"
+#    environment:
+#      - GF_SECURITY_ADMIN_USER=admin
+#      - GF_SECURITY_ADMIN_PASSWORD=grafana # 配置管理员密码
+#    volumes:
+#      - ./grafana:/etc/grafana/provisioning/datasources  # 当前grafana目录需要有配置文件
+#    restart: always
+#    depends_on:
+#      - prometheus
   kibana:
     image: kibana:7.17.9
     container_name: kibana-prod
@@ -68,7 +68,7 @@ services:
     restart: always
     depends_on:
       - kibana
-      - grafana
+#      - grafana
       - jaeger
       - prometheus
   redis:
@@ -95,7 +95,7 @@ services:
     container_name: mongodb
     restart: always
     volumes:
-      - ./mongodb/init.js:/docker-entrypoint-initdb.d/init.js:ro
+      - ./mongodb/init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     environment:
       MONGO_INITDB_DATABASE: suiteboot-example
     command: ["--replSet" , "myReplicaSet" , "--bind_ip", "localhost, mongodb"]
@@ -127,7 +127,6 @@ services:
       - mongodb
     ports:
       - "10006:8080"
-
   suiteboot-web:
     image: registry.cn-hangzhou.aliyuncs.com/opensource-sharing/suiteboot-web:v2.0
     container_name: suiteboot-web

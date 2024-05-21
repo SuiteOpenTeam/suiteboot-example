@@ -7,4 +7,4 @@ FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /app
 COPY --from=builder /app/target/suiteboot-example.tar.gz ./suiteboot-example.tar.gz
 RUN tar -zxvf ./suiteboot-example.tar.gz
-CMD [ "sleep", "1h"]
+CMD [ "sh", "suiteboot-example/bin/server.sh", "dev", "restart"]
