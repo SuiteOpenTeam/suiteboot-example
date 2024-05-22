@@ -61,8 +61,8 @@ services:
     image: registry.cn-hangzhou.aliyuncs.com/opensource-sharing/otel-collector:v0.96.0
     container_name: contrib-collector
     ports:
-      - "4317:4317"
-      - "4318:4318"
+      - "24317:4317"
+      - "24318:4318"
     volumes:
       - ./otelcol/otelcol-contrib-config.yaml:/etc/otelcol-contrib/config.yaml # 注意当前目录下需要有collector配置文件
     restart: always
