@@ -23,7 +23,7 @@ public class MongoTransactionDemoEndpoint {
     }
 
     @WithSpan
-    @GetMapping
+    @GetMapping("/tx")
     @WithTransaction(observable = true, concurrency = 5, enableLock = true)
     public Object findInTransaction() {
 

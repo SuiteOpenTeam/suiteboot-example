@@ -186,11 +186,11 @@ otel:
     resource:
       enabled: false
   logs:
-    exporter: logging
+    exporter: otlp
   metrics:
-    exporter: logging
+    exporter: otlp
   traces:
-    exporter: logging
+    exporter: otlp
 
 wms:
   path-forward:
