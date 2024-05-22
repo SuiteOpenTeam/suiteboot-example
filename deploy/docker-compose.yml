@@ -91,11 +91,9 @@ services:
     ports:
       - "13306:3306"
   mongodb:
-    image: mongo:latest
+    image: mongo:7.0.9
     container_name: mongodb
     restart: always
-    volumes:
-      - ./mongodb/init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     environment:
       MONGO_INITDB_DATABASE: suiteboot-example
     command: ["--replSet" , "myReplicaSet" , "--bind_ip", "localhost, mongodb"]
@@ -106,6 +104,7 @@ services:
     container_name: mongodbClient
     volumes:
       - ./mongodb/init.sh:/init.sh
+      - ./mongodb/data:/mongodb/data
     command: sh "/init.sh"
     depends_on:
       - mongodb
