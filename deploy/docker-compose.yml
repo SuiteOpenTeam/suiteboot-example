@@ -127,6 +127,7 @@ services:
       - mysql
       - elasticsearch
       - mongodb
+      - contrib-collector
     ports:
       - "10006:8080"
   suiteboot-web:
