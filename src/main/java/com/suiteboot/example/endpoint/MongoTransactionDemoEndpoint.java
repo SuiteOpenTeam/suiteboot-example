@@ -1,7 +1,8 @@
 package com.suiteboot.example.endpoint;
 
-import com.suiteopen.boot.common.utils.JsonUtils;
+import com.suiteopen.boot.common.log.Logs;
 import com.suiteopen.boot.custom.core.transaction.RFilters;
+import com.suiteopen.boot.custom.core.transaction.TransactionCommand;
 import com.suiteopen.boot.custom.core.transaction.TxRecordClient;
 import com.suiteopen.boot.custom.core.transaction.WithTransaction;
 import com.suiteopen.boot.custom.domain.CustomRecord;
@@ -26,12 +27,15 @@ public class MongoTransactionDemoEndpoint {
     @GetMapping("/tx")
     @WithTransaction(observable = true, concurrency = 5, enableLock = true)
     public Object findInTransaction() {
+        TransactionCommand<CustomRecord> command = txRecordClient.firstAsync(
+                "sales_order", RFilters.create());
+        CustomRecord customRecord = command.get();
 
-        CustomRecord customRecord = txRecordClient.first("sales_order", RFilters.create())
-                .orElse(null);
-
-        log.atInfo().setMessage(JsonUtils.toJson(customRecord))
+        log.atInfo().setMessage("This an test log message.")
                 .addKeyValue("id",1)
+                .addKeyValue("commandType", command.getCommandType())
+                .addKeyValue("customRecord",customRecord)
+                .addMarker(Logs.OTEL_BIZ_MARKER)
                 .log();
 
         return new HashMap<>();
