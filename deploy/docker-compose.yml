@@ -1,4 +1,4 @@
-version: "3"
+version: "3.4"
 
 services:
   elasticsearch:
@@ -90,6 +90,12 @@ services:
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
     ports:
       - "13306:3306"
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+      start_period: 5s
+      interval: 5s
+      timeout: 1s
+      retries: 9999
   mongodb:
     image: mongo:7.0.9
     container_name: mongodb
@@ -126,7 +132,7 @@ services:
       - redis
       - mysql
       - elasticsearch
-      - mongodb
+      - mongodbClient
       - contrib-collector
     ports:
       - "10006:8080"
