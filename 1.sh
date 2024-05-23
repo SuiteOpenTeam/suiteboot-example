@@ -1,0 +1,2 @@
+curl -X GET  'http://192.168.2.8:10007/prod-api/tx' \
+  -H 'Authorization: eyJhbGciOiJIUzUxMiJ9.eyJ1c2VyX2lkIjo2MjgsImNsaWVudF9lbmRwb2ludCI6IndlYiIsImF1dGhfdG9rZW5faWQiOiI1NmNlNjQ2NC1hYzY3LTQ2ZjQtOWYxMC0zODRkZDNhNmQyZjMifQ.4wrhJPvWyLt3ZOBYdzpfrm8OrttCC_J7kd4YvdFtkZPCVhuuMy_yIBruhgIvWQpqOnrcCcd_nw1I0voSAVl2fg'

@@ -185,6 +185,9 @@ otel:
   springboot:
     resource:
       enabled: false
+  exporter:
+    otlp:
+      protocol: grpc
   logs:
     exporter: otlp
   metrics:

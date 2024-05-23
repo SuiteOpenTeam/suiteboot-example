@@ -80,7 +80,6 @@ services:
     restart: always
     depends_on:
       - kibana
-#      - grafana
       - jaeger
       - prometheus
     networks:
@@ -155,6 +154,7 @@ services:
       - "OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://contrib-collector:4317"
       - "OTEL_EXPORTER_OTLP_METRICS_ENDPOINT=http://contrib-collector:4317"
       - "OTEL_EXPORTER_OTLP_LOGS_ENDPOINT=http://contrib-collector:4317"
+      - "OTEL_EXPORTER_OTLP_PROTOCOL=grpc"
     depends_on:
       - redis
       - mysql
