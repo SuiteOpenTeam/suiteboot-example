@@ -12,9 +12,12 @@ services:
     ports:
       - "19200:9200"
       - "19300:9300"
+    networks:
+      suiteboot-network:
+        ipv4_address: 172.20.0.100
   jaeger:
     image: jaegertracing/all-in-one:1
-    container_name: jaeger-prod
+    container_name: jaeger
     ports:
       - "10080:80"
       - "16686:16686"
@@ -23,9 +26,12 @@ services:
     restart: always
     depends_on:
       - elasticsearch
+    networks:
+      suiteboot-network:
+        ipv4_address: 172.20.0.101
   prometheus:
     image: prom/prometheus:v2.50.1
-    container_name: prometheus-prod
+    container_name: prometheus
     ports:
       - "19090:9090"
     command:
@@ -36,6 +42,9 @@ services:
     restart: always
     volumes:
       - ./prometheus/prometheus.yml:/prometheus/prometheus.yml
+    networks:
+      suiteboot-network:
+        ipv4_address: 172.20.0.102
 #  grafana:
 #    image: grafana/grafana:10.0.12
 #    container_name: grafana-prod
@@ -51,12 +60,15 @@ services:
 #      - prometheus
   kibana:
     image: kibana:7.17.9
-    container_name: kibana-prod
+    container_name: kibana
     ports:
       - "15601:5601"
     volumes:
       - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
     restart: always
+    networks:
+      suiteboot-network:
+        ipv4_address: 172.20.0.103
   contrib-collector:
     image: registry.cn-hangzhou.aliyuncs.com/opensource-sharing/otel-collector:v0.96.0
     container_name: contrib-collector
@@ -71,12 +83,18 @@ services:
 #      - grafana
       - jaeger
       - prometheus
+    networks:
+      suiteboot-network:
+        ipv4_address: 172.20.0.104
   redis:
     image: redis:7.2.4-alpine
     container_name: redis
     restart: always
     ports:
       - "16379:6379"
+    networks:
+      suiteboot-network:
+        ipv4_address: 172.20.0.105
   mysql:
     image: mysql:8.3.0
     container_name: mysql
@@ -96,6 +114,9 @@ services:
       interval: 5s
       timeout: 1s
       retries: 9999
+    networks:
+      suiteboot-network:
+        ipv4_address: 172.20.0.106
   mongodb:
     image: mongo:7.0.9
     container_name: mongodb
@@ -105,6 +126,9 @@ services:
     command: ["--replSet" , "myReplicaSet" , "--bind_ip", "localhost, mongodb"]
     ports:
       - "27027:27017"
+    networks:
+      suiteboot-network:
+        ipv4_address: 172.20.0.107
   mongodbClient:
     image: mongo:latest
     container_name: mongodbClient
@@ -114,6 +138,9 @@ services:
     command: sh "/init.sh"
     depends_on:
       - mongodb
+    networks:
+      suiteboot-network:
+        ipv4_address: 172.20.0.108
 
   suiteboot-example:
     image: registry.cn-hangzhou.aliyuncs.com/opensource-sharing/suiteboot-example:v2.0
@@ -136,6 +163,9 @@ services:
       - contrib-collector
     ports:
       - "10006:8080"
+    networks:
+      suiteboot-network:
+        ipv4_address: 172.20.0.109
   suiteboot-web:
     image: registry.cn-hangzhou.aliyuncs.com/opensource-sharing/suiteboot-web:v2.0
     container_name: suiteboot-web
@@ -144,4 +174,12 @@ services:
       - suiteboot-example
     ports:
       - "10007:80"
+    networks:
+      suiteboot-network:
+        ipv4_address: 172.20.0.110
 
+networks:
+  suiteboot-network:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
