@@ -91,7 +91,7 @@ services:
     ports:
       - "13306:3306"
     healthcheck:
-      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+      test: "mysql $$MYSQL_DATABASE -u$$MYSQL_USER -p$$MYSQL_PASSWORD -e 'SELECT 1;'"
       start_period: 5s
       interval: 5s
       timeout: 1s
