@@ -1,6 +1,6 @@
 package com.suiteboot.example;
 
-import com.suiteopen.boot.EnableSuiteOpenBoot;
+import com.suiteopen.boot.autoconfigure.EnableSuiteOpenBoot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;

@@ -3,7 +3,7 @@ spring:
     redisson:
       config: |
         singleServerConfig:
-          address: "redis://192.168.2.8:16379"
+          address: "redis://localhost:6379"
           database: 10
           connectionMinimumIdleSize: 12
         threads: 16
@@ -14,9 +14,9 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     driverClassName: com.mysql.cj.jdbc.Driver
     druid:
-      url: jdbc:mysql://192.168.2.8:13306/suiteboot-example?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&autoReconnect=true
+      url: jdbc:mysql://localhost:3306/suiteboot-example?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&autoReconnect=true
       username: root
-      password: root
+      password: 123456
       # 初始连接数
       initialSize: 5
       # 最小连接池数量
@@ -68,43 +68,9 @@ logging:
   config: classpath:logback.xml
 
 oss:
-  oci:
+  gridfs:
     enabled: true
-    user: ocid1.user.oc1..aaaaaaaaov57rqqw5lt7rabvdmnwec54bzcv7xoryb2tsmm5pa77hl6u3moa
-    fingerprint: 1b:ca:fc:b7:32:15:ce:d1:4f:9e:88:1f:03:13:8c:65
-    tenancy: ocid1.tenancy.oc1..aaaaaaaahufag5zpyb5chwcrfaujeum7zowbaz6j6d5kruvdo67d4ppasz7q
-    region: us-phoenix-1
-    namespace: cnvccdidlhc5
-    bucketName: bucket_renogy01
-    privateKey: |
-      -----BEGIN PRIVATE KEY-----
-      MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC9e/2vj7yxxNnq
-      e648wj9w9jjbe9Y0Od2+n0FTRPqdVNxxEVHCLoxuGge/Gu/625kBJwucGCgCN1pn
-      3Sb832DRlUyLyHu9O3D8tThkl7bNzd025uGdheXmJnWkvPLbnxYhCPhqlwxzlruT
-      /65ZThgk3cUPUh3aw760iNs+cRDa4QJd2rdWVxnby3wfboUjn2Jy+e2Oygoo+RgV
-      6Qp51p4A2aDZSZuRtAHlUw1j01anqqSGTmkNCtywp7fTmIIQap3r4ufRd2OvKaT5
-      0S3MeR8+bT47/SPGeKQWPAzRgopxJlI2HTdUoCIgk1VuVctRudpLI5tsripdDqB2
-      RE3dWMpXAgMBAAECggEAPKQn5j3MF+B2FVMLyioof5BtVeDmBsTWMKFrGKkkw6Fb
-      A1yVm92l177A5+pJDzGkX/gNASHB/COW7VKbnaYnqCtt2faJk2Aootekep0LRgYy
-      W9W8MtudXfDFCbnmx168iEoEpqg8telxksXrGG2j0HihDmwrXc3zhHegIvWwfTuj
-      /mDe+zv7SzDy6URkesbWewPe43SacxPXUXn0+AzJcKtLo1ZQuJikJfOWR17G/iOG
-      i7hEH3lkPsq44vR97CheOWHMo6/7sftCC/dHulYTAvcgGEm3HjnLB6Ja2ixfFkkQ
-      mKDSyLZq9etIWTIyQDM1S5h/ffJlGyVjT/PfWKhr0QKBgQDz8ZTRGXB3z8tsNLHG
-      cFhUEeAfckaTaUs9lU9SqChVRY1A2hKj8+ak53Mt8YbIZvLmPAo0h7g2VwahTqGc
-      h/+IO8MiRN8zz6BrM3QrkDRgNq5N70caH8F07UlwJVIcf6oE4oy+JFbALe6Zgzfy
-      KHMOYsf9kpZpxqWQSpmgLZzs8wKBgQDG2WFk5/yxupxEnjd8xp6ajNEiXNGa7hTK
-      ZjiIHpp37NHTvzvMycAGkaN6DiCJs34mJPsL+hyhnLMIuyPy7Tuf7nhPjUU4kGIk
-      nq3QPvsITMdrus7MQgIit503PNv5z7LZq4Zf1MEl1+kIg81GFD2fwy6jUImFGmVG
-      GlhAH2S2DQKBgCN5C8TkSCCEDPatKvTKPW3sM4UfHvgspY5M+f3xCfxsYr/9dhx1
-      SSLNrUgPCSR3I/cq3+kHm1f7i7FFN+cFN7ldx2BiV3q3RIKSNuBm1dbv3KTkmJhJ
-      6d3Q647tPmV6gwS21PSJYDwN8dZM6IPEMgbzglVzTYAQLN8wmepa96jVAoGAJZfX
-      R+Jr7ZXgEUDwMJDET2er6hkuL2IvYAxvR5yxi1akXKncvlyuBw/lnh+pmx7qDIAV
-      TjBc1VjwqAfpRfX/vb6x1ChbG9SAGXg+WA5wGyOY2A8bJZadHL8l49mHpPTVVT2O
-      S/PHCEaHceqpFkShWeDmok2JkjZpSxWT9Zt5yMkCgYA/GDoMLnbMkRqDLg+1g6gv
-      HDk81WxCESAoSf93XI3G+P4tF3GFCv4nwlwFcvoJmx85R9bOZsgeAVb+j1ZysGtj
-      iMebFT/Q5O5uS4NQMhn/6Zev2aEMKieXA+iAWewls1oKL7Ts64vtOrKH6Pkz95bf
-      HKtezp447iFu19+ujU8mmw==
-      -----END PRIVATE KEY-----
+    endpoint: http://192.168.2.5:8080
 
 notify:
   enable: false
